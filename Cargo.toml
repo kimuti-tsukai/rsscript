@@ -1,0 +1,3 @@
+[workspace]
+members = ["rsscript-compiler", "rsscript", "rsscript-macros"]
+resolver = "2"
