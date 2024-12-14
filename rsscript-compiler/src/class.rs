@@ -1,14 +1,7 @@
-use syn::{
-    braced, parse::Parse, punctuated::Punctuated, token::Brace, Generics, Ident, TypeParamBound,
-};
+use syn::{braced, parse::Parse, punctuated::Punctuated, token::Brace, Ident, TypeParamBound};
 
 use crate::{
-    enum_impl,
-    item::InitVar,
-    object::{ObjectIdent, ObjectMethod, ObjectStmt},
-    restrinction::{ClassVisibility, Visibility},
-    token::IdentPeeker,
-    Token,
+    enum_impl, generics::Generics, item::InitVar, object::{ObjectIdent, ObjectMethod, ObjectStmt}, restrinction::{ClassVisibility, Visibility}, token::IdentPeeker, Token
 };
 
 pub struct ClassField {

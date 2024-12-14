@@ -1,9 +1,9 @@
 use syn::{
-    parenthesized, parse::Parse, punctuated::Punctuated, token::Paren, FnArg, Generics, Ident, Pat,
+    parenthesized, parse::Parse, punctuated::Punctuated, token::Paren, FnArg, Ident, Pat,
 };
 
 use crate::{
-    class::ItemClass, enum_impl, expr::Expr, restrinction::Visibility, stmt::Block, Token,
+    class::ItemClass, enum_impl, expr::Expr, generics::Generics, restrinction::Visibility, stmt::Block, Token
 };
 
 enum_impl! {

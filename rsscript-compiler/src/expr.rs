@@ -3,14 +3,11 @@ use syn::{
     parse::Parse,
     punctuated::Punctuated,
     token::{Bracket, Paren},
-    AngleBracketedGenericArguments, BinOp, Generics, Ident, Member, Pat,
+    AngleBracketedGenericArguments, BinOp, Ident, Member, Pat,
 };
 
 use crate::{
-    enum_impl,
-    item::{FnArgs, TypeAnnotation},
-    stmt::{Block, Stmt},
-    Token,
+    enum_impl, generics::Generics, item::{FnArgs, TypeAnnotation}, stmt::{Block, Stmt}, Token
 };
 
 enum_impl!(

@@ -1,10 +1,7 @@
-use syn::{braced, parse::Parse, punctuated::Punctuated, token::Brace, Generics, Ident};
+use syn::{braced, parse::Parse, punctuated::Punctuated, token::Brace, Ident};
 
 use crate::{
-    enum_impl,
-    item::{FnArgs, TypeAnnotation},
-    stmt::Block,
-    Expr, Token,
+    enum_impl, generics::Generics, item::{FnArgs, TypeAnnotation}, stmt::Block, Expr, Token
 };
 
 pub struct ObjectIdent {
