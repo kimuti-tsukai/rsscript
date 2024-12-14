@@ -20,10 +20,10 @@ impl Parse for TypeParam {
         };
         let mut bounds = Punctuated::new();
 
-        while !input.is_empty() && !input.peek(Token![=]) {
+        while !input.peek(Token![,]) && !input.peek(Token![>]) && !input.peek(Token![=]) {
             let next = input.parse()?;
             bounds.push_value(next);
-            if input.is_empty() || input.peek(Token![=]) {
+            if input.peek(Token![,]) || input.peek(Token![>]) || input.peek(Token![=]) {
                 break;
             }
 
@@ -51,4 +51,33 @@ pub struct LifetimeParam {
     pub lifetime: Lifetime,
     pub extends_token: Option<Token![extends]>,
     pub bounds: Punctuated<Lifetime, Token![+]>,
+}
+
+impl Parse for LifetimeParam {
+    fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
+        let lifetime = input.parse()?;
+        let extends_token = if input.ipeek::<Token![extends]>() {
+            Some(input.parse()?)
+        } else {
+            None
+        };
+        let mut bounds = Punctuated::new();
+
+        while !input.peek(Token![,]) && !input.peek(Token![>]) {
+            let next = input.parse()?;
+            bounds.push_value(next);
+            if input.peek(Token![,]) || input.peek(Token![>]) {
+                break;
+            }
+
+            let punct = input.parse()?;
+            bounds.push_punct(punct);
+        }
+
+        Ok(Self {
+            lifetime,
+            extends_token,
+            bounds,
+        })
+    }
 }
