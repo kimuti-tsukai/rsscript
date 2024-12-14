@@ -1,6 +1,13 @@
 use syn::{parse::Parse, punctuated::Punctuated, Ident, Lifetime, Type, TypeParamBound};
 
-use crate::{token::IdentPeeker, Token};
+use crate::{enum_impl, token::IdentPeeker, Token};
+
+enum_impl! {
+    pub enum GenericsParam {
+        Type(TypeParam),
+        LifeTime(TypeParam),
+    }
+}
 
 pub struct TypeParam {
     pub ident: Ident,
