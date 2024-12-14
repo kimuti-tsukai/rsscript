@@ -1,11 +1,45 @@
-use syn::{parse::Parse, punctuated::Punctuated, Ident, Lifetime, Type, TypeParamBound};
+use syn::{parse::Parse, punctuated::Punctuated, ConstParam, Ident, Lifetime, Type, TypeParamBound};
 
 use crate::{enum_impl, token::IdentPeeker, Token};
+
+pub struct Generics {
+    pub lt_token: Token![<],
+    pub params: Punctuated<GenericsParam, Token![,]>,
+    pub gt_token: Token![>],
+}
+
+impl Parse for Generics {
+    fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
+        let lt_token = input.parse()?;
+        let mut params = Punctuated::new();
+
+        while !input.peek(Token![>]) {
+            let next = input.parse()?;
+            params.push_value(next);
+
+            if input.peek(Token![>]) {
+                break;
+            }
+
+            let punct = input.parse()?;
+            params.push_punct(punct);
+        }
+
+        let gt_token = input.parse()?;
+
+        Ok(Self {
+            lt_token,
+            params,
+            gt_token,
+        })
+    }
+}
 
 enum_impl! {
     pub enum GenericsParam {
         Type(TypeParam),
         LifeTime(TypeParam),
+        Const(ConstParam),
     }
 }
 
