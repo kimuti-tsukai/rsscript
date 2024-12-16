@@ -67,6 +67,9 @@ macro_rules! Token {
     [case] => {
         $crate::token::Case
     };
+    [interface] => {
+        $crate::token::Interface
+    };
     [$token:tt] => {
         syn::Token![$token]
     };
@@ -114,5 +117,6 @@ define_keyword!(
     class, Class;
     extends, Extends;
     switch, Switch;
-    case, Case
+    case, Case;
+    interface, Interface
 );
