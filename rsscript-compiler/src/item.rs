@@ -1,10 +1,13 @@
+use class::ItemClass;
 use syn::{
     parenthesized, parse::Parse, punctuated::Punctuated, token::Paren, FnArg, Ident, Pat,
 };
 
 use crate::{
-    class::ItemClass, enum_impl, expr::Expr, generics::Generics, restrinction::Visibility, stmt::Block, Token
+    enum_impl, expr::Expr, generics::Generics, restrinction::Visibility, stmt::Block, Token
 };
+
+pub mod class;
 
 enum_impl! {
     pub enum Item {
