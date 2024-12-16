@@ -9,6 +9,8 @@ use crate::{
 
 pub mod class;
 
+pub mod interface;
+
 enum_impl! {
     pub enum Item {
         Local(Local),
