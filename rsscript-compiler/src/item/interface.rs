@@ -1,6 +1,6 @@
 use syn::{parse::Parse, punctuated::Punctuated, token::Brace, Ident, Type, TypeParamBound};
 
-use crate::{generics::Generics, restrinction::Visibility, stmt::Block, Token};
+use crate::{generics::Generics, restrinction::Visibility, stmt::Block, token::{IdentPeeker, TypePeeker}, Token};
 
 use super::{FnArgs, TypeAnnotation};
 
@@ -15,7 +15,7 @@ pub struct Interface {
 }
 
 pub enum InterfaceItem {
-    Fn(InterfaceItemFn),
+    Function(InterfaceItemFn),
     Type(InterfaceItemType),
 }
 
@@ -67,4 +67,56 @@ pub struct InterfaceItemType {
     pub bounds: Option<(Token![extends], Punctuated<TypeParamBound, Token![+]>)>,
     pub default: Option<(Token![=], Type)>,
     pub semicolon_token: Option<Token![;]>,
+}
+
+impl Parse for InterfaceItemType {
+    fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
+        let type_token = input.parse()?;
+        let ident = input.parse()?;
+        let generics = input.parse()?;
+        let bounds = if input.ipeek::<Token![extends]>() {
+            let extends_token = input.parse()?;
+            let mut bounds = Punctuated::new();
+
+            loop {
+                let next = input.parse()?;
+                bounds.push_punct(next);
+
+                if input.is_empty() || input.cpeek::<TypeParamBound>() {
+                    break;
+                }
+
+                let punct = input.parse()?;
+                bounds.push_punct(punct);
+
+                if input.is_empty() || input.cpeek::<TypeParamBound>() {
+                    break;
+                }
+            }
+
+            Some((extends_token, bounds))
+        } else {
+            None
+        };
+
+        let default = if input.peek(Token![=]) {
+            let eq_token = input.parse()?;
+            let ty = input.parse()?;
+
+            Some((eq_token, ty))
+        } else {
+            None
+        };
+
+        let semicolon_token = input.parse()?;
+
+        Ok(Self {
+            type_token,
+            ident,
+            generics,
+            bounds,
+            default,
+            semicolon_token,
+        })
+    }
 }
