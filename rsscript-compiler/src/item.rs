@@ -1,11 +1,9 @@
 use class::ItemClass;
-use interface::Interface;
-use syn::{
-    parenthesized, parse::Parse, punctuated::Punctuated, token::Paren, FnArg, Ident, Pat,
-};
+use interface::ItemInterface;
+use syn::{parenthesized, parse::Parse, punctuated::Punctuated, token::Paren, FnArg, Ident, Pat};
 
 use crate::{
-    enum_impl, expr::Expr, generics::Generics, restrinction::Visibility, stmt::Block, Token
+    enum_impl, expr::Expr, generics::Generics, restrinction::Visibility, stmt::Block, Token,
 };
 
 pub mod class;
@@ -17,7 +15,7 @@ enum_impl! {
         Local(Local),
         Function(ItemFunction),
         Class(ItemClass),
-        Interface(Interface),
+        Interface(ItemInterface),
     }
 }
 

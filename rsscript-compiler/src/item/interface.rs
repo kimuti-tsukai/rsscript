@@ -12,7 +12,7 @@ use crate::{
 
 use super::{FnArgs, TypeAnnotation};
 
-pub struct Interface {
+pub struct ItemInterface {
     pub vis: Visibility,
     pub interface_token: Token![interface],
     pub ident: Ident,
@@ -22,7 +22,7 @@ pub struct Interface {
     pub items: Vec<InterfaceItem>,
 }
 
-impl Parse for Interface {
+impl Parse for ItemInterface {
     fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
         let vis = input.parse()?;
         let interface_token = input.parse()?;
