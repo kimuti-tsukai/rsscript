@@ -1,4 +1,6 @@
-use syn::{parse::Parse, punctuated::Punctuated, token::Brace, Ident, Type, TypeParamBound};
+use syn::{
+    braced, parse::Parse, punctuated::Punctuated, token::Brace, Ident, Type, TypeParamBound,
+};
 
 use crate::{
     generics::Generics,
@@ -16,8 +18,60 @@ pub struct Interface {
     pub ident: Ident,
     pub generics: Generics,
     pub bounds: Option<(Token![extends], Punctuated<TypeParamBound, Token![+]>)>,
-    pub brace: Brace,
+    pub brace_token: Brace,
     pub items: Vec<InterfaceItem>,
+}
+
+impl Parse for Interface {
+    fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
+        let vis = input.parse()?;
+        let interface_token = input.parse()?;
+        let ident = input.parse()?;
+        let generics = input.parse()?;
+        let bounds = if input.ipeek::<Token![extends]>() {
+            let extends_token = input.parse()?;
+            let mut bounds = Punctuated::new();
+
+            loop {
+                let next = input.parse()?;
+                bounds.push_value(next);
+
+                if input.peek(Brace) {
+                    break;
+                }
+
+                let punct = input.parse()?;
+                bounds.push_punct(punct);
+
+                if input.peek(Brace) {
+                    break;
+                }
+            }
+
+            Some((extends_token, bounds))
+        } else {
+            None
+        };
+
+        let content;
+        let brace_token = braced!(content in input);
+        let mut items = Vec::new();
+
+        while !content.is_empty() {
+            let item = input.parse()?;
+            items.push(item);
+        }
+
+        Ok(Self {
+            vis,
+            interface_token,
+            ident,
+            generics,
+            bounds,
+            brace_token,
+            items,
+        })
+    }
 }
 
 pub enum InterfaceItem {
