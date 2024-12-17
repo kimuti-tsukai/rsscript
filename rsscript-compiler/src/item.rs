@@ -1,4 +1,5 @@
 use class::ItemClass;
+use interface::Interface;
 use syn::{
     parenthesized, parse::Parse, punctuated::Punctuated, token::Paren, FnArg, Ident, Pat,
 };
@@ -16,6 +17,7 @@ enum_impl! {
         Local(Local),
         Function(ItemFunction),
         Class(ItemClass),
+        Interface(Interface),
     }
 }
 
