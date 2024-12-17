@@ -1,6 +1,8 @@
 use class::ItemClass;
 use interface::ItemInterface;
-use syn::{parenthesized, parse::Parse, punctuated::Punctuated, token::Paren, FnArg, Ident, Pat};
+use syn::{
+    parenthesized, parse::Parse, punctuated::Punctuated, token::Paren, FnArg, Ident, Pat, Type,
+};
 
 use crate::{
     enum_impl, expr::Expr, generics::Generics, restrinction::Visibility, stmt::Block, Token,
@@ -16,6 +18,7 @@ enum_impl! {
         Function(ItemFunction),
         Class(ItemClass),
         Interface(ItemInterface),
+        TypeAlias(ItemTypeAlias),
     }
 }
 
@@ -133,6 +136,28 @@ impl Parse for ItemFunction {
                 None
             },
             body: input.parse()?,
+        })
+    }
+}
+
+pub struct ItemTypeAlias {
+    pub vis: Visibility,
+    pub type_token: Token![type],
+    pub ident: Ident,
+    pub generics: Generics,
+    pub eq_token: Token![=],
+    pub alias: Type,
+}
+
+impl Parse for ItemTypeAlias {
+    fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
+        Ok(Self {
+            vis: input.parse()?,
+            type_token: input.parse()?,
+            ident: input.parse()?,
+            generics: input.parse()?,
+            eq_token: input.parse()?,
+            alias: input.parse()?,
         })
     }
 }
