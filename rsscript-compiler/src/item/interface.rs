@@ -1,6 +1,12 @@
 use syn::{parse::Parse, punctuated::Punctuated, token::Brace, Ident, Type, TypeParamBound};
 
-use crate::{generics::Generics, restrinction::Visibility, stmt::Block, token::{IdentPeeker, TypePeeker}, Token};
+use crate::{
+    generics::Generics,
+    restrinction::Visibility,
+    stmt::Block,
+    token::{IdentPeeker, TypePeeker},
+    Token,
+};
 
 use super::{FnArgs, TypeAnnotation};
 
@@ -17,6 +23,18 @@ pub struct Interface {
 pub enum InterfaceItem {
     Function(InterfaceItemFn),
     Type(InterfaceItemType),
+}
+
+impl Parse for InterfaceItem {
+    fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
+        if input.ipeek::<Token![function]>() {
+            Ok(Self::Function(input.parse()?))
+        } else if input.peek(Token![type]) {
+            Ok(Self::Type(input.parse()?))
+        } else {
+            Err(input.error("Interface value have to be function or trait"))
+        }
+    }
 }
 
 pub struct InterfaceItemFn {
