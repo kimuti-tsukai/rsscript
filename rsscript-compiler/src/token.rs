@@ -131,3 +131,34 @@ define_keyword!(
     case, Case;
     interface, Interface
 );
+
+#[cfg(test)]
+mod test {
+    #[allow(unused_imports)]
+    use super::*;
+    use quote::quote;
+
+    #[test]
+    fn ipeek_test() {
+        let token_stream = quote! {
+            rust impl case
+        };
+
+        #[derive(Debug)]
+        struct GenParseStream;
+
+        impl Parse for GenParseStream {
+            fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
+                assert!(input.ipeek::<Token![rust]>());
+                assert!(input.peek2(Token![impl]));
+                assert!(input.ipeekn::<Token![case]>(3));
+                let _: Token![rust] = input.parse()?;
+                let _: Token![impl] = input.parse()?;
+                let _: Token![case] = input.parse()?;
+                Ok(GenParseStream)
+            }
+        }
+
+        syn::parse2::<GenParseStream>(token_stream).unwrap();
+    }
+}
