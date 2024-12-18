@@ -1,5 +1,5 @@
 use proc_macro2::Span;
-use syn::{ext::IdentExt, parse::Parse, Ident};
+use syn::parse::Parse;
 
 use crate::parsing;
 
@@ -22,16 +22,31 @@ impl TypePeeker for syn::parse::ParseBuffer<'_> {
 }
 
 pub trait IdentPeek {
-    fn ipeek(input: syn::parse::ParseStream) -> bool;
+    fn ipeek(input: syn::buffer::Cursor) -> bool;
 }
 
 pub trait IdentPeeker {
     fn ipeek<T: IdentPeek>(&self) -> bool;
+
+    fn ipeekn<T: IdentPeek>(&self, n: usize) -> bool;
 }
 
 impl IdentPeeker for syn::parse::ParseBuffer<'_> {
     fn ipeek<T: IdentPeek>(&self) -> bool {
-        T::ipeek(self)
+        T::ipeek(self.cursor())
+    }
+
+    fn ipeekn<T: IdentPeek>(&self, n: usize) -> bool {
+        let mut cursor = self.cursor();
+        for _ in 0..n - 1 {
+            if let Some((_, c)) = cursor.token_tree() {
+                cursor = c;
+            } else {
+                return false;
+            }
+        }
+
+        T::ipeek(cursor)
     }
 }
 
@@ -95,12 +110,8 @@ macro_rules! define_keyword {
             }
 
             impl IdentPeek for $struct {
-                fn ipeek(input: syn::parse::ParseStream) -> bool {
-                    input.peek(Ident::peek_any) && {
-                        let fork = input.fork();
-                        let ident = Ident::parse_any(&fork).unwrap();
-                        ident == std::stringify!($keyword)
-                    }
+                fn ipeek(input: syn::buffer::Cursor) -> bool {
+                    parsing::peek_keyword(input, std::stringify!($keyword))
                 }
             }
         )+

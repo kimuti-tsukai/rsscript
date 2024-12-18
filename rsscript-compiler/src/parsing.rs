@@ -1,3 +1,5 @@
+use syn::buffer::Cursor;
+
 pub fn keyword(input: syn::parse::ParseStream, token: &str) -> syn::Result<proc_macro2::Span> {
     input.step(|cursor| {
         if let Some((ident, rest)) = cursor.ident() {
@@ -7,6 +9,14 @@ pub fn keyword(input: syn::parse::ParseStream, token: &str) -> syn::Result<proc_
         }
         Err(cursor.error(format!("expected `{}`", token)))
     })
+}
+
+pub fn peek_keyword(cursor: Cursor, token: &str) -> bool {
+    if let Some((ident, _rest)) = cursor.ident() {
+        ident == token
+    } else {
+        false
+    }
 }
 
 #[macro_export]
