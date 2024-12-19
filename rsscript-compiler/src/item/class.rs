@@ -95,6 +95,7 @@ enum_impl! {
     pub enum ClassStmtValue {
         Field(ClassField),
         Method(ClassMethod),
+        TypeAlias(ClassTypeAlias),
     }
 }
 

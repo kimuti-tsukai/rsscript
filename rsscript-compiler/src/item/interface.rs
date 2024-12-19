@@ -6,7 +6,7 @@ use crate::{
     generics::Generics,
     restrinction::Visibility,
     stmt::Block,
-    token::{IdentPeeker, TypePeeker},
+    token::IdentPeeker,
     Token,
 };
 
@@ -150,18 +150,21 @@ impl Parse for InterfaceItemType {
             let extends_token = input.parse()?;
             let mut bounds = Punctuated::new();
 
+            let check_next =
+                || input.peek(Token![;]) || input.ipeek::<Token![function]>();
+
             loop {
                 let next = input.parse()?;
                 bounds.push_punct(next);
 
-                if input.is_empty() || input.cpeek::<TypeParamBound>() {
+                if check_next() {
                     break;
                 }
 
                 let punct = input.parse()?;
                 bounds.push_punct(punct);
 
-                if input.is_empty() || input.cpeek::<TypeParamBound>() {
+                if check_next() {
                     break;
                 }
             }
