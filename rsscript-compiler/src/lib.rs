@@ -15,4 +15,4 @@ pub mod stmt;
 
 pub mod generics;
 
-mod parsing;
+pub mod parsing;
