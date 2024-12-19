@@ -1,7 +1,19 @@
-use syn::{braced, parse::Parse, punctuated::Punctuated, token::Brace, Ident, TypeParamBound};
+use syn::{
+    braced, parenthesized,
+    parse::Parse,
+    punctuated::Punctuated,
+    token::{Brace, Paren},
+    Ident, Path, TypeParamBound,
+};
 
 use crate::{
-    enum_impl, generics::Generics, item::InitVar, object::{ObjectIdent, ObjectMethod, ObjectStmt}, restrinction::{ClassVisibility, Visibility}, token::IdentPeeker, Token
+    enum_impl,
+    generics::Generics,
+    item::InitVar,
+    object::{ObjectIdent, ObjectMethod, ObjectStmt},
+    restrinction::{ClassVisibility, Visibility},
+    token::IdentPeeker,
+    Token,
 };
 
 pub struct ClassField {
@@ -23,6 +35,7 @@ impl Parse for ClassField {
 }
 
 pub struct ClassMethod {
+    pub restrict: ImplRestriction,
     pub static_token: Option<Token![static]>,
     pub method: ObjectMethod,
 }
@@ -30,15 +43,33 @@ pub struct ClassMethod {
 impl Parse for ClassMethod {
     fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
         Ok(Self {
+            restrict: input.parse()?,
             static_token: input.parse()?,
             method: input.parse()?,
         })
     }
 }
 
+pub struct ImplRestriction {
+    pub impl_token: Token![impl],
+    pub paren_token: Paren,
+    pub restrict: Path,
+}
+
+impl Parse for ImplRestriction {
+    fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
+        let content;
+        Ok(Self {
+            impl_token: input.parse()?,
+            paren_token: parenthesized!(content in input),
+            restrict: content.parse()?,
+        })
+    }
+}
+
 enum_impl! {
     pub enum ClassStmtValue {
-        ClassField(ClassField),
+        Field(ClassField),
         Method(ClassMethod),
     }
 }
