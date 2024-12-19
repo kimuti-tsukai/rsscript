@@ -3,24 +3,6 @@ use syn::parse::Parse;
 
 use crate::parsing;
 
-pub trait TypePeek: Parse {
-    fn cpeek(input: syn::parse::ParseStream) -> bool {
-        input.fork().parse::<Self>().is_ok()
-    }
-}
-
-impl<T: Parse> TypePeek for T {}
-
-pub trait TypePeeker {
-    fn cpeek<T: TypePeek>(&self) -> bool;
-}
-
-impl TypePeeker for syn::parse::ParseBuffer<'_> {
-    fn cpeek<T: TypePeek>(&self) -> bool {
-        T::cpeek(self)
-    }
-}
-
 pub trait IdentPeek {
     fn ipeek(input: syn::buffer::Cursor) -> bool;
 }
