@@ -19,10 +19,6 @@ pub fn peek_keyword(cursor: Cursor, token: &str) -> bool {
     }
 }
 
-pub trait IsNext {
-    fn is_next(input: syn::parse::ParseStream) -> bool;
-}
-
 #[macro_export]
 macro_rules! enum_impl {
     (
