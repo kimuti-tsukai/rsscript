@@ -97,10 +97,20 @@ impl Parse for DefaultDecl {
     }
 }
 
-enum_impl! {
-    pub enum ArmDecl {
-        Case(CaseDecl),
-        Default(DefaultDecl),
+pub enum ArmDecl {
+    Case(CaseDecl),
+    Default(DefaultDecl),
+}
+
+impl Parse for ArmDecl {
+    fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
+        if input.ipeek::<Token![case]>() {
+            Ok(Self::Case(input.parse()?))
+        } else if input.peek(Token![default]) {
+            Ok(Self::Default(input.parse()?))
+        } else {
+            Err(input.error("Switch arm have to be case or default"))
+        }
     }
 }
 
