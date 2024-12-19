@@ -96,6 +96,12 @@ macro_rules! define_keyword {
                     parsing::peek_keyword(input, std::stringify!($keyword))
                 }
             }
+
+            impl parsing::IsNext for $struct {
+                fn is_next(input: syn::parse::ParseStream) -> bool {
+                    input.ipeek::<Self>()
+                }
+            }
         )+
     };
 }
