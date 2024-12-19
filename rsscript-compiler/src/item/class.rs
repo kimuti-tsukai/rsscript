@@ -16,6 +16,8 @@ use crate::{
     Token,
 };
 
+use super::ItemTypeAlias;
+
 pub struct ClassField {
     pub ident: ObjectIdent,
     pub init: Option<InitVar>,
@@ -46,6 +48,24 @@ impl Parse for ClassMethod {
             restrict: input.parse()?,
             static_token: input.parse()?,
             method: input.parse()?,
+        })
+    }
+}
+
+pub struct ClassTypeAlias {
+    pub restrict: Option<ImplRestriction>,
+    pub alias: ItemTypeAlias,
+}
+
+impl Parse for ClassTypeAlias {
+    fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
+        Ok(Self {
+            restrict: if input.peek(Token![impl]) {
+                Some(input.parse()?)
+            } else {
+                None
+            },
+            alias: input.parse()?,
         })
     }
 }
