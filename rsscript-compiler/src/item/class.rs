@@ -8,9 +8,9 @@ use syn::{
 
 use crate::{
     enum_impl,
+    expr::object::{ObjectIdent, ObjectMethod, ObjectStmt},
     generics::Generics,
     item::InitVar,
-    object::{ObjectIdent, ObjectMethod, ObjectStmt},
     restrinction::{ClassVisibility, Visibility},
     token::IdentPeeker,
     Token,

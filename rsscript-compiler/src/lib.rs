@@ -9,8 +9,6 @@ pub mod token;
 
 pub mod restrinction;
 
-pub mod object;
-
 pub mod stmt;
 
 pub mod generics;

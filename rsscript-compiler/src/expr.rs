@@ -6,6 +6,8 @@ use syn::{
     AngleBracketedGenericArguments, BinOp, Ident, Member, Pat,
 };
 
+pub mod object;
+
 use crate::{
     enum_impl, generics::Generics, item::{FnArgs, TypeAnnotation}, stmt::{Block, Stmt}, Token
 };
