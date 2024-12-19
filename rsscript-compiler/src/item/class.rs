@@ -37,7 +37,7 @@ impl Parse for ClassField {
 }
 
 pub struct ClassMethod {
-    pub restrict: ImplRestriction,
+    pub restrict: Option<ImplRestriction>,
     pub static_token: Option<Token![static]>,
     pub method: ObjectMethod,
 }
@@ -45,7 +45,11 @@ pub struct ClassMethod {
 impl Parse for ClassMethod {
     fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
         Ok(Self {
-            restrict: input.parse()?,
+            restrict: if input.peek(Token![impl]) {
+                Some(input.parse()?)
+            } else {
+                None
+            },
             static_token: input.parse()?,
             method: input.parse()?,
         })
