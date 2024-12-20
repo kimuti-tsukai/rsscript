@@ -74,10 +74,7 @@ macro_rules! Token {
 
 #[macro_export(local_inner_macros)]
 macro_rules! define_keyword {
-    ($($keyword:ident, $struct:ident);+) => {
-        define_keyword!(@inner [$] $($keyword, $struct);+);
-    };
-    (@inner [$dollar:tt] $($keyword:ident, $struct:ident);+) => {
+    ($($keyword:tt, $struct:ident);+) => {
         $(
             pub struct $struct {
                 pub span: Span,
