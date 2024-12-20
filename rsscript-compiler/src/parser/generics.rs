@@ -2,7 +2,7 @@ use syn::{
     parse::Parse, punctuated::Punctuated, ConstParam, Ident, Lifetime, Type, TypeParamBound,
 };
 
-use crate::{token::IdentPeeker, Token};
+use crate::{parser::token::IdentPeeker, Token};
 
 pub struct Generics {
     pub lt_token: Token![<],

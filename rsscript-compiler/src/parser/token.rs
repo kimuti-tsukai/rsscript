@@ -1,7 +1,7 @@
 use proc_macro2::Span;
 use syn::parse::Parse;
 
-use crate::parsing;
+use crate::parser::parsing;
 
 pub trait IdentPeek {
     fn ipeek(input: syn::buffer::Cursor) -> bool;
@@ -35,37 +35,37 @@ impl IdentPeeker for syn::parse::ParseBuffer<'_> {
 #[macro_export]
 macro_rules! Token {
     [rust] => {
-        $crate::token::Rust
+        $crate::parser::token::Rust
     };
     [function] => {
-        $crate::token::Function
+        $crate::parser::token::Function
     };
     [export] => {
-        $crate::token::Export
+        $crate::parser::token::Export
     };
     [private] => {
-        $crate::token::Private
+        $crate::parser::token::Private
     };
     [public] => {
-        $crate::token::Public
+        $crate::parser::token::Public
     };
     [protected] => {
-        $crate::token::Protected
+        $crate::parser::token::Protected
     };
     [class] => {
-        $crate::token::Class
+        $crate::parser::token::Class
     };
     [extends] => {
-        $crate::token::Extends
+        $crate::parser::token::Extends
     };
     [switch] => {
-        $crate::token::Switch
+        $crate::parser::token::Switch
     };
     [case] => {
-        $crate::token::Case
+        $crate::parser::token::Case
     };
     [interface] => {
-        $crate::token::Interface
+        $crate::parser::token::Interface
     };
     [$token:tt] => {
         syn::Token![$token]

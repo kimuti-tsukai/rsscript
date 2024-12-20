@@ -5,8 +5,10 @@ use syn::{
 };
 
 use crate::{
-    expr::Expr, generics::Generics, restrinction::Visibility, stmt::Block,
-    token::IdentPeeker, Token,
+    parser::{
+        expr::Expr, generics::Generics, restrinction::Visibility, stmt::Block, token::IdentPeeker,
+    },
+    Token,
 };
 
 pub mod class;

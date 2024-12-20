@@ -2,10 +2,13 @@ use syn::{braced, parse::Parse, punctuated::Punctuated, token::Brace, Ident};
 
 use crate::{
     enum_impl,
-    generics::Generics,
-    item::{FnArgs, TypeAnnotation},
-    stmt::Block,
-    Expr, Token,
+    parser::{
+        generics::Generics,
+        item::{FnArgs, TypeAnnotation},
+        stmt::Block,
+        Expr,
+    },
+    Token,
 };
 
 pub struct ObjectIdent {

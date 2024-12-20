@@ -6,7 +6,9 @@ use syn::{
 };
 
 use crate::{
-    enum_impl, expr::ExprParen, item::DeclarationKeyword, token::IdentPeeker, Expr, Item, Token,
+    enum_impl,
+    parser::{expr::ExprParen, item::DeclarationKeyword, token::IdentPeeker, Expr, Item},
+    Token,
 };
 
 pub struct Stmt {

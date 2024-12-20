@@ -1,6 +1,6 @@
 use syn::parse::Parse;
 
-use crate::{token::IdentPeeker, Token};
+use crate::{parser::token::IdentPeeker, Token};
 
 pub struct Visibility {
     pub export_token: Option<Token![export]>,

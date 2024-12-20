@@ -9,7 +9,13 @@ use syn::{
 pub mod object;
 
 use crate::{
-    enum_impl, generics::Generics, item::{FnArgs, TypeAnnotation}, stmt::{Block, Stmt}, Token
+    enum_impl,
+    parser::{
+        generics::Generics,
+        item::{FnArgs, TypeAnnotation},
+        stmt::{Block, Stmt},
+    },
+    Token,
 };
 
 enum_impl!(

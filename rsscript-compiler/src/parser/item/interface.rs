@@ -3,10 +3,7 @@ use syn::{
 };
 
 use crate::{
-    generics::Generics,
-    restrinction::Visibility,
-    stmt::Block,
-    token::IdentPeeker,
+    parser::{generics::Generics, restrinction::Visibility, stmt::Block, token::IdentPeeker},
     Token,
 };
 
@@ -150,8 +147,7 @@ impl Parse for InterfaceItemType {
             let extends_token = input.parse()?;
             let mut bounds = Punctuated::new();
 
-            let check_next =
-                || input.peek(Token![;]) || input.ipeek::<Token![function]>();
+            let check_next = || input.peek(Token![;]) || input.ipeek::<Token![function]>();
 
             loop {
                 let next = input.parse()?;

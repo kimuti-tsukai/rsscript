@@ -8,11 +8,13 @@ use syn::{
 
 use crate::{
     enum_impl,
-    expr::object::{ObjectIdent, ObjectMethod, ObjectStmt},
-    generics::Generics,
-    item::InitVar,
-    restrinction::{ClassVisibility, Visibility},
-    token::IdentPeeker,
+    parser::{
+        expr::object::{ObjectIdent, ObjectMethod, ObjectStmt},
+        generics::Generics,
+        item::InitVar,
+        restrinction::{ClassVisibility, Visibility},
+        token::IdentPeeker,
+    },
     Token,
 };
 
