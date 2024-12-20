@@ -121,6 +121,7 @@ impl Parse for ExprBinary {
 
 pub struct ExprField {
     pub base: Box<Expr>,
+    pub optional: Option<Token![?]>,
     pub dot_token: Token![.],
     pub member: Member,
 }
@@ -129,6 +130,7 @@ impl Parse for ExprField {
     fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
         Ok(Self {
             base: input.parse()?,
+            optional: input.parse()?,
             dot_token: input.parse()?,
             member: input.parse()?,
         })
