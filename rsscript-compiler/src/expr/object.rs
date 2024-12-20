@@ -1,7 +1,11 @@
 use syn::{braced, parse::Parse, punctuated::Punctuated, token::Brace, Ident};
 
 use crate::{
-    enum_impl, generics::Generics, item::{FnArgs, TypeAnnotation}, stmt::Block, Expr, Token
+    enum_impl,
+    generics::Generics,
+    item::{FnArgs, TypeAnnotation},
+    stmt::Block,
+    Expr, Token,
 };
 
 pub struct ObjectIdent {
@@ -46,26 +50,21 @@ impl Parse for ObjectMethod {
     }
 }
 
-pub struct ObjectNamedField {
+pub struct ObjectField {
     pub ident: ObjectIdent,
-    pub colon_token: Token![:],
-    pub expr: Expr,
+    pub init: Option<(Token![:], Expr)>,
 }
 
-impl Parse for ObjectNamedField {
+impl Parse for ObjectField {
     fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
         Ok(Self {
             ident: input.parse()?,
-            colon_token: input.parse()?,
-            expr: input.parse()?,
+            init: if input.peek(Token![:]) {
+                Some((input.parse()?, input.parse()?))
+            } else {
+                None
+            },
         })
-    }
-}
-
-enum_impl! {
-    pub enum ObjectField {
-        Named(ObjectNamedField),
-        Omitted(Ident),
     }
 }
 

@@ -5,20 +5,49 @@ use syn::{
 };
 
 use crate::{
-    enum_impl, expr::Expr, generics::Generics, restrinction::Visibility, stmt::Block, Token,
+    expr::Expr, generics::Generics, restrinction::Visibility, stmt::Block,
+    token::IdentPeeker, Token,
 };
 
 pub mod class;
 
 pub mod interface;
 
-enum_impl! {
-    pub enum Item {
-        Local(Local),
-        Function(ItemFunction),
-        Class(ItemClass),
-        Interface(ItemInterface),
-        TypeAlias(ItemTypeAlias),
+pub enum Item {
+    Local(Local),
+    Function(ItemFunction),
+    Class(ItemClass),
+    Interface(ItemInterface),
+    TypeAlias(ItemTypeAlias),
+}
+
+impl Parse for Item {
+    fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
+        if input.peek(Token![const]) || input.peek(Token![let]) {
+            Ok(Self::Local(input.parse()?))
+        } else if input.ipeek::<Token![function]>()
+            || input.peek(Token![async]) && input.ipeekn::<Token![function]>(2)
+            || input.ipeek::<Token![export]>() && input.ipeekn::<Token![function]>(2)
+            || input.ipeek::<Token![export]>()
+                && input.peek2(Token![async])
+                && input.ipeekn::<Token![function]>(3)
+        {
+            Ok(Self::Function(input.parse()?))
+        } else if input.ipeek::<Token![class]>()
+            || input.ipeek::<Token![export]>() && input.ipeekn::<Token![class]>(2)
+        {
+            Ok(Self::Class(input.parse()?))
+        } else if input.ipeek::<Token![interface]>()
+            || input.ipeek::<Token![export]>() && input.ipeekn::<Token![interface]>(2)
+        {
+            Ok(Self::Interface(input.parse()?))
+        } else if input.peek(Token![type])
+            || input.ipeek::<Token![export]>() && input.peek2(Token![type])
+        {
+            Ok(Self::TypeAlias(input.parse()?))
+        } else {
+            Err(input.error("Not excepted token"))
+        }
     }
 }
 

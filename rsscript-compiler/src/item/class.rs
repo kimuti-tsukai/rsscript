@@ -37,7 +37,6 @@ impl Parse for ClassField {
 }
 
 pub struct ClassMethod {
-    pub restrict: Option<ImplRestriction>,
     pub static_token: Option<Token![static]>,
     pub method: ObjectMethod,
 }
@@ -45,11 +44,6 @@ pub struct ClassMethod {
 impl Parse for ClassMethod {
     fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
         Ok(Self {
-            restrict: if input.peek(Token![impl]) {
-                Some(input.parse()?)
-            } else {
-                None
-            },
             static_token: input.parse()?,
             method: input.parse()?,
         })
@@ -57,18 +51,12 @@ impl Parse for ClassMethod {
 }
 
 pub struct ClassTypeAlias {
-    pub restrict: Option<ImplRestriction>,
     pub alias: ItemTypeAlias,
 }
 
 impl Parse for ClassTypeAlias {
     fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
         Ok(Self {
-            restrict: if input.peek(Token![impl]) {
-                Some(input.parse()?)
-            } else {
-                None
-            },
             alias: input.parse()?,
         })
     }
@@ -100,6 +88,7 @@ enum_impl! {
 }
 
 pub struct ClassStmt {
+    pub restrict: Option<ImplRestriction>,
     pub vis: ClassVisibility,
     pub stmt: ObjectStmt,
     pub semi_colon_token: Option<Token![;]>,
@@ -108,6 +97,11 @@ pub struct ClassStmt {
 impl Parse for ClassStmt {
     fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
         Ok(Self {
+            restrict: if input.peek(Token![impl]) {
+                Some(input.parse()?)
+            } else {
+                None
+            },
             vis: input.parse()?,
             stmt: input.parse()?,
             semi_colon_token: input.parse()?,

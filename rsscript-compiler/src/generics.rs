@@ -1,6 +1,8 @@
-use syn::{parse::Parse, punctuated::Punctuated, ConstParam, Ident, Lifetime, Type, TypeParamBound};
+use syn::{
+    parse::Parse, punctuated::Punctuated, ConstParam, Ident, Lifetime, Type, TypeParamBound,
+};
 
-use crate::{enum_impl, token::IdentPeeker, Token};
+use crate::{token::IdentPeeker, Token};
 
 pub struct Generics {
     pub lt_token: Token![<],
@@ -35,11 +37,23 @@ impl Parse for Generics {
     }
 }
 
-enum_impl! {
-    pub enum GenericsParam {
-        Type(TypeParam),
-        LifeTime(TypeParam),
-        Const(ConstParam),
+pub enum GenericsParam {
+    Type(TypeParam),
+    Lifetime(LifetimeParam),
+    Const(ConstParam),
+}
+
+impl Parse for GenericsParam {
+    fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
+        if input.peek(Ident) {
+            Ok(Self::Type(input.parse()?))
+        } else if input.peek(Lifetime) {
+            Ok(Self::Lifetime(input.parse()?))
+        } else if input.peek(Token![const]) {
+            Ok(Self::Const(input.parse()?))
+        } else {
+            Err(input.error("Not excepted token"))
+        }
     }
 }
 

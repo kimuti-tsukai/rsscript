@@ -31,7 +31,7 @@ enum_impl! {
         For(StmtFor),
         While(StmtWhile),
         DoWhile(StmtDoWhile),
-        Item(Box<Item>),
+        Item(Item),
         Expr(Expr),
     }
 }
