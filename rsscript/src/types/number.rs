@@ -2,13 +2,17 @@ use std::fmt::Display;
 
 use super::JsValue;
 
+pub mod number_ops;
+
 #[derive(Clone, Copy, PartialEq, Debug, PartialOrd)]
 pub struct Number {
     value: f64,
 }
 
 pub fn Number(value: impl JsValue) -> Number {
-    Number { value: value.to_string().parse().unwrap() }
+    Number {
+        value: value.to_string().parse().unwrap(),
+    }
 }
 
 impl Display for Number {
@@ -86,6 +90,10 @@ impl Number {
             Some(Self { value: radix }) => format!("{:.*}", radix as usize, self.value),
             None => format!("{}", self.value),
         }
+    }
+
+    const fn as_i64(self) -> i64 {
+        self.value as i64
     }
 }
 
