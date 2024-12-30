@@ -1,3 +1,3 @@
 pub mod parser;
 
-pub mod compile;
+pub mod encode;
