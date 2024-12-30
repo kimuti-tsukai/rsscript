@@ -21,3 +21,7 @@ impl<T: DynClone + Display> JsValue for T {
         String(self.to_string())
     }
 }
+
+pub trait Constructor<F> {
+    const constructor: F;
+}
