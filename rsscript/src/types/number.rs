@@ -1,12 +1,14 @@
 use std::fmt::Display;
 
+use super::JsValue;
+
 #[derive(Clone, Copy, PartialEq, Debug, PartialOrd)]
 pub struct Number {
     value: f64,
 }
 
-pub fn Number(value: f64) -> Number {
-    Number { value }
+pub fn Number(value: impl JsValue) -> Number {
+    Number { value: value.to_string().parse().unwrap() }
 }
 
 impl Display for Number {
