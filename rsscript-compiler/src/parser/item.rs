@@ -1,7 +1,11 @@
 use class::ItemClass;
 use interface::ItemInterface;
 use syn::{
-    parenthesized, parse::Parse, punctuated::Punctuated, token::Paren, FnArg, Ident, Pat, Type,
+    braced, parenthesized,
+    parse::Parse,
+    punctuated::Punctuated,
+    token::{Brace, Paren},
+    FnArg, Ident, Pat, Path, Type,
 };
 
 use crate::{
@@ -21,6 +25,7 @@ pub enum Item {
     Class(ItemClass),
     Interface(ItemInterface),
     TypeAlias(ItemTypeAlias),
+    Import(ItemImport),
 }
 
 impl Parse for Item {
@@ -47,6 +52,10 @@ impl Parse for Item {
             || input.ipeek::<Token![export]>() && input.peek2(Token![type])
         {
             Ok(Self::TypeAlias(input.parse()?))
+        } else if input.ipeek::<Token![import]>()
+            || input.ipeek::<Token![export]>() && input.ipeekn::<Token![import]>(2)
+        {
+            Ok(Self::Import(input.parse()?))
         } else {
             Err(input.error("Not excepted token"))
         }
@@ -189,6 +198,56 @@ impl Parse for ItemTypeAlias {
             generics: input.parse()?,
             eq_token: input.parse()?,
             alias: input.parse()?,
+        })
+    }
+}
+
+pub enum ImportName {
+    Name(syn::UseName),
+    Rename(syn::UseRename),
+    Glob(syn::UseGlob),
+}
+
+impl Parse for ImportName {
+    fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
+        if input.peek(Token![*]) {
+            let star_token: Token![*] = input.parse()?;
+            Ok(Self::Glob(syn::UseGlob { star_token }))
+        } else if input.peek2(Token![as]) {
+            let ident = input.parse()?;
+            let as_token: Token![as] = input.parse()?;
+            let rename = input.parse()?;
+            Ok(Self::Rename(syn::UseRename {
+                ident,
+                as_token,
+                rename,
+            }))
+        } else {
+            let ident = input.parse()?;
+            Ok(Self::Name(syn::UseName { ident }))
+        }
+    }
+}
+
+pub struct ItemImport {
+    pub exsport_token: Visibility,
+    pub import_token: Token![import],
+    pub brace: Brace,
+    pub items: Punctuated<ImportName, Token![,]>,
+    pub from_token: Token![from],
+    pub path: Path,
+}
+
+impl Parse for ItemImport {
+    fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
+        let content;
+        Ok(Self {
+            exsport_token: input.parse()?,
+            import_token: input.parse()?,
+            brace: braced!(content in input),
+            items: Punctuated::parse_terminated(&content)?,
+            from_token: content.parse()?,
+            path: input.parse()?,
         })
     }
 }

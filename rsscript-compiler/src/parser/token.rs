@@ -67,6 +67,12 @@ macro_rules! Token {
     [interface] => {
         $crate::parser::token::Interface
     };
+    [import] => {
+        $crate::parser::token::Import
+    };
+    [from] => {
+        $crate::parser::token::From
+    };
     [$token:tt] => {
         syn::Token![$token]
     };
@@ -74,7 +80,7 @@ macro_rules! Token {
 
 #[macro_export(local_inner_macros)]
 macro_rules! define_keyword {
-    ($($keyword:tt, $struct:ident);+) => {
+    ($($keyword:tt, $struct:ident);+ $(;)?) => {
         $(
             pub struct $struct {
                 pub span: Span,
@@ -108,7 +114,9 @@ define_keyword!(
     extends, Extends;
     switch, Switch;
     case, Case;
-    interface, Interface
+    interface, Interface;
+    import, Import;
+    from, From;
 );
 
 #[cfg(test)]
