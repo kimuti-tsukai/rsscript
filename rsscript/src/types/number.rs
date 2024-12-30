@@ -1,8 +1,12 @@
 use std::fmt::Display;
 
-#[derive(Clone, Copy, PartialEq, Debug)]
+#[derive(Clone, Copy, PartialEq, Debug, PartialOrd)]
 pub struct Number {
     value: f64,
+}
+
+pub fn Number(value: f64) -> Number {
+    Number { value }
 }
 
 impl Display for Number {
@@ -48,6 +52,38 @@ impl Number {
 
     pub const fn isNan(self) -> bool {
         self.value.is_nan()
+    }
+
+    pub fn toExponential(self, fraction_digits: Option<Number>) -> String {
+        match fraction_digits {
+            Some(Self {
+                value: fraction_digits,
+            }) => format!("{:.*e}", fraction_digits as usize, self.value),
+            None => format!("{:e}", self.value),
+        }
+    }
+
+    pub fn toFixed(self, fraction_digits: Option<Number>) -> String {
+        match fraction_digits {
+            Some(Self {
+                value: fraction_digits,
+            }) => format!("{:.*}", fraction_digits as usize, self.value),
+            None => format!("{:.0}", self.value),
+        }
+    }
+
+    pub fn toPrecision(self, precision: Option<Number>) -> String {
+        match precision {
+            Some(Self { value: precision }) => format!("{:.*}", precision as usize, self.value),
+            None => format!("{}", self.value),
+        }
+    }
+
+    pub fn toString(self, radix: Option<Number>) -> String {
+        match radix {
+            Some(Self { value: radix }) => format!("{:.*}", radix as usize, self.value),
+            None => format!("{}", self.value),
+        }
     }
 }
 

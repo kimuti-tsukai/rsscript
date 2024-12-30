@@ -4,7 +4,7 @@ pub struct JsString {
     value: String,
 }
 
-pub fn JsString(value: String) -> JsString {
+pub fn String(value: String) -> JsString {
     JsString { value }
 }
 
