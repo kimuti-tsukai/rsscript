@@ -1,5 +1,3 @@
-#![allow(non_snake_case, non_camel_case_types, non_upper_case_globals)]
-
 use std::fmt::Display;
 
 #[derive(Clone, Copy, PartialEq, Debug)]
@@ -50,5 +48,17 @@ impl Number {
 
     pub const fn isNan(self) -> bool {
         self.value.is_nan()
+    }
+}
+
+impl From<f64> for Number {
+    fn from(value: f64) -> Self {
+        Self { value }
+    }
+}
+
+impl From<Number> for f64 {
+    fn from(value: Number) -> f64 {
+        value.value
     }
 }
