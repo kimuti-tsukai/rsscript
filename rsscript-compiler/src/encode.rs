@@ -18,3 +18,11 @@ pub trait ToRustCode {
         tokens
     }
 }
+
+impl<T: ToRustCode> ToRustCode for Option<T> {
+    fn to_rust_code(&self, tokens: &mut TokenStream) {
+        if let Some(inner) = self {
+            inner.to_rust_code(tokens);
+        }
+    }
+}
