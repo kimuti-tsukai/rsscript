@@ -2,19 +2,18 @@
 
 use std::fmt::Display;
 
-#[allow(non_camel_case_types)]
 #[derive(Clone, Copy, PartialEq, Debug)]
-pub struct number {
+pub struct Number {
     value: f64,
 }
 
-impl Display for number {
+impl Display for Number {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.value)
     }
 }
 
-impl number {
+impl Number {
     pub const EPSILON: Self = Self {
         value: f64::EPSILON,
     };
