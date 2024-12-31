@@ -1,11 +1,12 @@
-use super::number::Number;
+use super::{number::Number, Constructor, JsValue};
 
+#[derive(Clone, PartialEq, Eq, Debug, Hash, PartialOrd, Ord)]
 pub struct JsString {
     value: String,
 }
 
-pub fn String(value: String) -> JsString {
-    JsString { value }
+pub fn String(value: impl JsValue) -> JsString {
+    JsString { value: value.to_string() }
 }
 
 impl JsString {
@@ -27,4 +28,14 @@ impl JsString {
                 .collect(),
         }
     }
+}
+
+impl std::fmt::Display for JsString {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.value)
+    }
+}
+
+impl<T: JsValue> Constructor<fn(T) -> Self> for JsString {
+    const constructor: fn(T) -> Self = String;
 }
