@@ -6,7 +6,9 @@ pub struct JsString {
 }
 
 pub fn String(value: impl JsValue) -> JsString {
-    JsString { value: value.to_string() }
+    JsString {
+        value: value.to_string(),
+    }
 }
 
 impl JsString {
@@ -26,6 +28,40 @@ impl JsString {
                 .iter()
                 .map(|n| std::char::from_u32(f64::from(*n) as u32).unwrap())
                 .collect(),
+        }
+    }
+
+    pub fn at(&self, index: Number) -> Option<Self> {
+        if index < Number(0) {
+            Some(Self {
+                value: self
+                    .value
+                    .chars()
+                    .nth(self.value.len() - f64::from(index) as usize)?
+                    .to_string(),
+            })
+        } else {
+            Some(Self {
+                value: self
+                    .value
+                    .chars()
+                    .nth(f64::from(index) as usize)?
+                    .to_string(),
+            })
+        }
+    }
+
+    pub fn charAt(&self, index: Number) -> Option<Self> {
+        if index < Number(0) {
+            None
+        } else {
+            Some(Self {
+                value: self
+                    .value
+                    .chars()
+                    .nth(f64::from(index) as usize)?
+                    .to_string(),
+            })
         }
     }
 }
