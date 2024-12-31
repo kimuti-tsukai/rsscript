@@ -118,13 +118,37 @@ impl_bin_bit_ops!(
 
 macro_rules! impl_shl {
     ($($t:ty),* $(,)?) => ($(
-        impl ops::Shl<$t> for Number {
-            type Output = Self;
+        impl ops::Shl<&$t> for &Number {
+            type Output = Number;
 
-            fn shl(self, rhs: $t) -> Self {
-                Self {
+            fn shl(self, rhs: &$t) -> Number {
+                Number {
                     value: (self.as_i64() << rhs) as f64,
                 }
+            }
+        }
+
+        impl ops::Shl<$t> for &Number {
+            type Output = Number;
+
+            fn shl(self, rhs: $t) -> Number {
+                self.shl(&rhs)
+            }
+        }
+
+        impl ops::Shl<&$t> for Number {
+            type Output = Number;
+
+            fn shl(self, rhs: &$t) -> Number {
+                (&self).shl(rhs)
+            }
+        }
+
+        impl ops::Shl<$t> for Number {
+            type Output = Number;
+
+            fn shl(self, rhs: $t) -> Number {
+                (&self).shl(&rhs)
             }
         }
     )*)
@@ -134,13 +158,37 @@ impl_shl!(u8, u16, u32, u64, u128, usize, i8, i16, i32, i64, i128, isize,);
 
 macro_rules! impl_shr {
     ($($t:ty),* $(,)?) => ($(
-        impl ops::Shr<$t> for Number {
-            type Output = Self;
+        impl ops::Shr<&$t> for &Number {
+            type Output = Number;
 
-            fn shr(self, rhs: $t) -> Self {
-                Self {
+            fn shr(self, rhs: &$t) -> Number {
+                Number {
                     value: (self.as_i64() >> rhs) as f64,
                 }
+            }
+        }
+
+        impl ops::Shr<$t> for Number {
+            type Output = Number;
+
+            fn shr(self, rhs: $t) -> Number {
+                (&self).shr(&rhs)
+            }
+        }
+
+        impl ops::Shr<$t> for &Number {
+            type Output = Number;
+
+            fn shr(self, rhs: $t) -> Number {
+                self.shr(&rhs)
+            }
+        }
+
+        impl ops::Shr<&$t> for Number {
+            type Output = Number;
+
+            fn shr(self, rhs: &$t) -> Number {
+                (&self).shr(rhs)
             }
         }
     )*)
@@ -149,11 +197,17 @@ macro_rules! impl_shr {
 impl_shr!(u8, u16, u32, u64, u128, usize, i8, i16, i32, i64, i128, isize,);
 
 macro_rules! impl_assign_ops {
-    ($($trait: path, $method: ident);* $(;)?) => {
+    ($($($path: ident)::+, $method: ident);* $(;)?) => {
         $(
-            impl $trait for Number {
+            impl $($path)::+ <&Self> for Number {
+                fn $method(&mut self, rhs: &Self) {
+                    self.value.$method(&rhs.value);
+                }
+            }
+
+            impl $($path)::+ for Number {
                 fn $method(&mut self, rhs: Self) {
-                    self.value.$method(rhs.value);
+                    self.$method(&rhs);
                 }
             }
         )*
@@ -169,11 +223,17 @@ impl_assign_ops!(
 );
 
 macro_rules! impl_assign_bit_ops {
-    ($($trait: path, $method: ident, $not_assign: tt);* $(;)?) => {
+    ($($($path: ident)::+, $method: ident, $not_assign: tt);* $(;)?) => {
         $(
-            impl $trait for Number {
-                fn $method(&mut self, rhs: Self) {
+            impl $($path)::+ <&Self> for Number {
+                fn $method(&mut self, rhs: &Self) {
                     self.value = (self.as_i64() $not_assign (rhs.as_i64())) as f64;
+                }
+            }
+
+            impl $($path)::+ for Number {
+                fn $method(&mut self, rhs: Self) {
+                    self.$method(&rhs);
                 }
             }
         )*
