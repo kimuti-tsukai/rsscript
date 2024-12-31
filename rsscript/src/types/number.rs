@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-use super::JsValue;
+use super::{Constructor, JsValue};
 
 pub mod number_ops;
 
@@ -107,4 +107,8 @@ impl From<Number> for f64 {
     fn from(value: Number) -> f64 {
         value.value
     }
+}
+
+impl<T: JsValue> Constructor<fn(T) -> Self> for Number {
+    const constructor: fn(T) -> Self = Number;
 }
