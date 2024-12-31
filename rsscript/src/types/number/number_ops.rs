@@ -3,9 +3,9 @@ use std::ops;
 use super::Number;
 
 macro_rules! impl_bin_ops {
-    ($($($path: ident)::* , $method: ident);* $(;)?) => {
+    ($($($path: ident)::+ , $method: ident);* $(;)?) => {
         $(
-            impl $($path)::* for &Number {
+            impl $($path)::+ for &Number {
                 type Output = Number;
 
                 fn $method(self, rhs: Self) -> Number {
@@ -15,7 +15,7 @@ macro_rules! impl_bin_ops {
                 }
             }
 
-            impl $($path)::* for Number {
+            impl $($path)::+ for Number {
                 type Output = Self;
 
                 fn $method(self, rhs: Self) -> Self {
@@ -23,7 +23,7 @@ macro_rules! impl_bin_ops {
                 }
             }
 
-            impl $($path)::* <&Self> for Number {
+            impl $($path)::+ <&Self> for Number {
                 type Output = Self;
 
                 fn $method(self, rhs: &Self) -> Self {
@@ -31,7 +31,7 @@ macro_rules! impl_bin_ops {
                 }
             }
 
-            impl $($path)::* <Number> for &Number {
+            impl $($path)::+ <Number> for &Number {
                 type Output = Number;
 
                 fn $method(self, rhs: Number) -> Number {
