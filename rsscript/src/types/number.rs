@@ -1,4 +1,4 @@
-use std::fmt::Display;
+use std::{fmt::Display, ops::Deref};
 
 use super::{Constructor, JsValue};
 
@@ -7,6 +7,14 @@ pub mod number_ops;
 #[derive(Clone, Copy, PartialEq, Debug, PartialOrd)]
 pub struct Number {
     value: f64,
+}
+
+impl Deref for Number {
+    type Target = f64;
+
+    fn deref(&self) -> &Self::Target {
+        &self.value
+    }
 }
 
 pub fn Number(value: impl JsValue) -> Number {
