@@ -38,6 +38,74 @@ macro_rules! impl_bin_ops {
                     self.$method(&rhs)
                 }
             }
+
+            impl $($path)::+ <&f64> for &Number {
+                type Output = Number;
+
+                fn $method(self, rhs: &f64) -> Number {
+                    Number {
+                        value: self.value.$method(*rhs),
+                    }
+                }
+            }
+
+            impl $($path)::+ <f64> for &Number {
+                type Output = Number;
+
+                fn $method(self, rhs: f64) -> Number {
+                    self.$method(&rhs)
+                }
+            }
+
+            impl $($path)::+ <&f64> for Number {
+                type Output = Number;
+
+                fn $method(self, rhs: &f64) -> Number {
+                    (&self).$method(rhs)
+                }
+            }
+
+            impl $($path)::+ <f64> for Number {
+                type Output = Number;
+
+                fn $method(self, rhs: f64) -> Number {
+                    (&self).$method(&rhs)
+                }
+            }
+
+            impl $($path)::+ <&Number> for &f64 {
+                type Output = Number;
+
+                fn $method(self, rhs: &Number) -> Number {
+                    Number {
+                        value: self.$method(rhs.value),
+                    }
+                }
+            }
+
+            impl $($path)::+ <Number> for &f64 {
+                type Output = Number;
+
+                fn $method(self, rhs: Number) -> Number {
+                    self.$method(&rhs)
+                }
+            }
+
+            impl $($path)::+ <&Number> for f64 {
+                type Output = Number;
+
+                fn $method(self, rhs: &Number) -> Number {
+                    (&self).$method(rhs)
+                }
+            }
+
+            impl $($path)::+ <Number> for f64 {
+                type Output = Number;
+
+                fn $method(self, rhs: Number) -> Number {
+                    (&self).$method(&rhs)
+                }
+            }
         )*
     };
 }
