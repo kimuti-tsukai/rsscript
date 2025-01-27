@@ -1,6 +1,6 @@
 use std::{fmt::Display, ops::Deref};
 
-use super::{Constructor, JsValue};
+use super::{string::JsString, Constructor, JsValue};
 
 pub mod number_ops;
 
@@ -114,6 +114,14 @@ impl From<f64> for Number {
 impl From<Number> for f64 {
     fn from(value: Number) -> f64 {
         value.value
+    }
+}
+
+impl From<JsString> for Number {
+    fn from(value: JsString) -> Self {
+        Self {
+            value: value.to_string().parse().unwrap_or(f64::NAN),
+        }
     }
 }
 
