@@ -1,4 +1,4 @@
-use std::ops::{Add, Deref};
+use std::ops::{Add, AddAssign, Deref};
 
 use super::{number::Number, Constructor, JsValue};
 
@@ -204,6 +204,18 @@ impl Add<JsString> for JsString {
 
     fn add(self, rhs: JsString) -> Self::Output {
         &self + &rhs
+    }
+}
+
+impl AddAssign<&JsString> for JsString {
+    fn add_assign(&mut self, rhs: &JsString) {
+        self.value += &rhs.value;
+    }
+}
+
+impl AddAssign<JsString> for JsString {
+    fn add_assign(&mut self, rhs: JsString) {
+        self.value += &rhs.value;
     }
 }
 
