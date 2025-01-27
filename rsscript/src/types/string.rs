@@ -1,4 +1,4 @@
-use std::ops::Deref;
+use std::ops::{Add, Deref};
 
 use super::{number::Number, Constructor, JsValue};
 
@@ -171,6 +171,40 @@ impl JsString {
     //             .collect::<Vec<_>>(),
     //     )
     // }
+}
+
+impl Add<&JsString> for &JsString {
+    type Output = JsString;
+
+    fn add(self, rhs: &JsString) -> Self::Output {
+        JsString {
+            value: self.value.clone() + &rhs.value,
+        }
+    }
+}
+
+impl Add<JsString> for &JsString {
+    type Output = JsString;
+
+    fn add(self, rhs: JsString) -> Self::Output {
+        self + &rhs
+    }
+}
+
+impl Add<&JsString> for JsString {
+    type Output = JsString;
+
+    fn add(self, rhs: &JsString) -> Self::Output {
+        &self + rhs
+    }
+}
+
+impl Add<JsString> for JsString {
+    type Output = JsString;
+
+    fn add(self, rhs: JsString) -> Self::Output {
+        &self + &rhs
+    }
 }
 
 impl std::fmt::Display for JsString {
