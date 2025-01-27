@@ -1,6 +1,6 @@
 use std::{fmt::Display, ops::Deref};
 
-use super::{string::JsString, Constructor, JsValue};
+use super::{string::{JsString, String}, Constructor, JsValue};
 
 pub mod number_ops;
 
@@ -68,35 +68,35 @@ impl Number {
         self.value.is_nan()
     }
 
-    pub fn toExponential(self, fraction_digits: Option<Number>) -> String {
+    pub fn toExponential(self, fraction_digits: Option<Number>) -> JsString {
         match fraction_digits {
             Some(Self {
                 value: fraction_digits,
-            }) => format!("{:.*e}", fraction_digits as usize, self.value),
-            None => format!("{:e}", self.value),
+            }) => String(format!("{:.*e}", fraction_digits as usize, self.value)),
+            None => String(format!("{:e}", self.value)),
         }
     }
 
-    pub fn toFixed(self, fraction_digits: Option<Number>) -> String {
+    pub fn toFixed(self, fraction_digits: Option<Number>) -> JsString {
         match fraction_digits {
             Some(Self {
                 value: fraction_digits,
-            }) => format!("{:.*}", fraction_digits as usize, self.value),
-            None => format!("{:.0}", self.value),
+            }) => String(format!("{:.*}", fraction_digits as usize, self.value)),
+            None => String(format!("{:.0}", self.value)),
         }
     }
 
-    pub fn toPrecision(self, precision: Option<Number>) -> String {
+    pub fn toPrecision(self, precision: Option<Number>) -> JsString {
         match precision {
-            Some(Self { value: precision }) => format!("{:.*}", precision as usize, self.value),
-            None => format!("{}", self.value),
+            Some(Self { value: precision }) => String(format!("{:.*}", precision as usize, self.value)),
+            None => String(format!("{}", self.value)),
         }
     }
 
-    pub fn toString(self, radix: Option<Number>) -> String {
+    pub fn toString(self, radix: Option<Number>) -> JsString {
         match radix {
-            Some(Self { value: radix }) => format!("{:.*}", radix as usize, self.value),
-            None => format!("{}", self.value),
+            Some(Self { value: radix }) => String(format!("{:.*}", radix as usize, self.value)),
+            None => String(format!("{}", self.value)),
         }
     }
 
