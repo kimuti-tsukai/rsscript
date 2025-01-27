@@ -33,3 +33,35 @@ impl Add<JsString> for Number {
         &self + &rhs
     }
 }
+
+impl Add<&Number> for &JsString {
+    type Output = JsString;
+
+    fn add(self, rhs: &Number) -> Self::Output {
+        self + &JsValue::toString(rhs)
+    }
+}
+
+impl Add<Number> for &JsString {
+    type Output = JsString;
+
+    fn add(self, rhs: Number) -> Self::Output {
+        self.add(&rhs)
+    }
+}
+
+impl Add<&Number> for JsString {
+    type Output = JsString;
+
+    fn add(self, rhs: &Number) -> Self::Output {
+        (&self).add(rhs)
+    }
+}
+
+impl Add<Number> for JsString {
+    type Output = JsString;
+
+    fn add(self, rhs: Number) -> Self::Output {
+        (&self).add(&rhs)
+    }
+}
