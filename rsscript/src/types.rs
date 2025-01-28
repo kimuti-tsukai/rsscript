@@ -29,7 +29,7 @@ pub trait JsValue: DynClone + Display {
 
 impl<T: DynClone + Display> JsValue for T {
     fn toString(self) -> JsString {
-        String(self.to_string())
+        String(self)
     }
 }
 
