@@ -1,4 +1,4 @@
-use std::ops::Add;
+use std::ops::{Add, Sub};
 
 use crate::types::{Number, JsString, JsValue};
 
@@ -63,5 +63,53 @@ impl Add<Number> for JsString {
 
     fn add(self, rhs: Number) -> Self::Output {
         (&self).add(&rhs)
+    }
+}
+
+impl Sub<&Number> for &JsString {
+    type Output = Number;
+    
+    fn sub(self, rhs: &Number) -> Self::Output {
+        Number(self) - rhs
+    }
+}
+
+impl Sub<&JsString> for &Number {
+    type Output = Number;
+    
+    fn sub(self, rhs: &JsString) -> Self::Output {
+        self - Number(rhs)
+    }
+}
+
+impl Sub<&Number> for JsString {
+    type Output = Number;
+
+    fn sub(self, rhs: &Number) -> Self::Output {
+        Number(self) - rhs
+    }
+}
+
+impl Sub<&JsString> for Number {
+    type Output = Number;
+
+    fn sub(self, rhs: &JsString) -> Self::Output {
+        self - Number(rhs)
+    }
+}
+
+impl Sub<Number> for JsString {
+    type Output = Number;
+
+    fn sub(self, rhs: Number) -> Self::Output {
+        Number(self) - rhs
+    }
+}
+
+impl Sub<JsString> for Number {
+    type Output = Number;
+
+    fn sub(self, rhs: JsString) -> Self::Output {
+        self - Number(rhs)
     }
 }
