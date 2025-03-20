@@ -1,4 +1,4 @@
-use std::ops::{Add, AddAssign, Deref};
+use std::ops::{Add, AddAssign, Deref, Mul};
 
 use super::{number::Number, Constructor, JsValue};
 
@@ -222,6 +222,46 @@ impl AddAssign<JsString> for JsString {
 impl std::fmt::Display for JsString {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.value)
+    }
+}
+
+impl Mul<&Number> for &JsString {
+    type Output = JsString;
+
+    fn mul(self, rhs: &Number) -> Self::Output {
+        JsString {
+            value: self.value.repeat(rhs.as_f64() as usize),
+        }
+    }
+}
+
+impl Mul<Number> for &JsString {
+    type Output = JsString;
+
+    fn mul(self, rhs: Number) -> Self::Output {
+        JsString {
+            value: self.value.repeat(rhs.as_f64() as usize),
+        }
+    }
+}
+
+impl Mul<&Number> for JsString {
+    type Output = JsString;
+
+    fn mul(self, rhs: &Number) -> Self::Output {
+        JsString {
+            value: self.value.repeat(rhs.as_f64() as usize),
+        }
+    }
+}
+
+impl Mul<Number> for JsString {
+    type Output = JsString;
+
+    fn mul(self, rhs: Number) -> Self::Output {
+        JsString {
+            value: self.value.repeat(rhs.as_f64() as usize),
+        }
     }
 }
 

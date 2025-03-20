@@ -99,6 +99,10 @@ impl Number {
             None => String(format!("{}", self.value)),
         }
     }
+    
+    pub const fn as_f64(self) -> f64 {
+        self.value
+    }
 
     const fn as_i64(self) -> i64 {
         self.value as i64
